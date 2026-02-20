@@ -91,9 +91,9 @@
 
 <script>
 const firebaseConfig = {
-  apiKey: "COLE_AQUI_SUA_API_KEY",
-  authDomain: "COLE_AQUI.firebaseapp.com",
-  projectId: "COLE_AQUI"
+  apiKey: "AIzaSyDj5-aBr2n_wg80HswcaIOjetm7DtxILSI",
+  authDomain: "nexostudios-site-e9458.firebaseapp.com",
+  projectId: "nexostudios-site-e9458",
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -136,7 +136,7 @@ function login(){
 
   auth.signInWithEmailAndPassword(email, senha)
     .then(() => {
-      window.location.href = "COLE_AQUI_URL_DO_GOOGLE_SITES";
+      window.location.href = "https://sites.google.com/view/nexostudios/torneio-liberado";
     })
     .catch(error => {
       document.getElementById("mensagem").innerText = error.message;
