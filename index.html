@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Nexo Studios - Login</title>
+  <title>Nexo Studios</title>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -62,14 +62,12 @@
 
 <div class="box">
 
-  <!-- TELA INICIAL -->
   <div id="home">
     <h2>Nexo Studios</h2>
     <button onclick="mostrarLogin()">Entrar</button>
     <button onclick="mostrarCadastro()">Cadastrar-se</button>
   </div>
 
-  <!-- LOGIN -->
   <div id="loginDiv" class="hidden">
     <h2>Entrar</h2>
     <input type="email" id="loginEmail" placeholder="E-mail">
@@ -78,7 +76,6 @@
     <button onclick="voltar()">Voltar</button>
   </div>
 
-  <!-- CADASTRO -->
   <div id="cadastroDiv" class="hidden">
     <h2>Cadastrar-se</h2>
     <input type="text" id="cadNome" placeholder="Nome">
@@ -94,9 +91,9 @@
 
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyDj5-aBr2n_wg80HswcaIOjetm7DtxILSI",
-  authDomain: "nexostudios-site-e9458.firebaseapp.com",
-  projectId: "nexostudios-site-e9458",
+  apiKey: "COLE_AQUI_SUA_API_KEY",
+  authDomain: "COLE_AQUI.firebaseapp.com",
+  projectId: "COLE_AQUI"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -120,13 +117,12 @@ function voltar(){
 }
 
 function cadastrar(){
-  const nome = document.getElementById("cadNome").value;
   const email = document.getElementById("cadEmail").value;
   const senha = document.getElementById("cadSenha").value;
 
   auth.createUserWithEmailAndPassword(email, senha)
     .then(() => {
-      document.getElementById("mensagem").innerText = "Conta criada com sucesso! Faça login.";
+      document.getElementById("mensagem").innerText = "Conta criada! Faça login.";
       voltar();
     })
     .catch(error => {
@@ -140,7 +136,7 @@ function login(){
 
   auth.signInWithEmailAndPassword(email, senha)
     .then(() => {
-      window.location.href =https://sites.google.com/view/nexostudios/torneio-liberado
+      window.location.href = "COLE_AQUI_URL_DO_GOOGLE_SITES";
     })
     .catch(error => {
       document.getElementById("mensagem").innerText = error.message;
