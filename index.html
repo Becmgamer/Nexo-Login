@@ -2,127 +2,114 @@
 <html>
 <head>
   <title>Nexus Studios - Login</title>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <meta charset="UTF-8">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_AUTH_DOMAIN",
+      projectId: "SEU_PROJECT_ID",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.login = function() {
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      signInWithEmailAndPassword(auth, email, senha)
+        .then(() => {
+          window.location.href = "https://site.google.com/view/nexusstudios/inscricao-confirmada";
+        })
+        .catch(() => {
+          alert("Login incorreto!");
+        });
+    }
+  </script>
 
   <style>
-    body{
-      background: linear-gradient(135deg, #00ffcc, #00ccff);
-      font-family: Arial;
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #00ff99, #00ccff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px #00ffcc;
+      width: 300px;
       text-align: center;
-      padding-top: 100px;
-    }
-
-    .box{
-      background: white;
-      padding: 30px;
-      width: 350px;
-      margin: auto;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    }
-
-    input{
-      width: 90%;
-      padding: 10px;
-      margin: 8px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    button{
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #00ccff;
       color: white;
-      cursor: pointer;
-      font-weight: bold;
     }
 
-    button:hover{
-      background: #0099cc;
+    h2 {
+      margin-bottom: 20px;
+      color: #00ffcc;
     }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 15px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      background: #00ff99;
+      transition: 0.4s;
+      box-shadow: 0 0 15px #00ff99;
+    }
+
+    button:hover {
+      background: #00ccff;
+      box-shadow: 0 0 25px #00ccff;
+      transform: scale(1.05);
+    }
+
+    .voltar {
+      margin-top: 15px;
+      display: block;
+      color: #00ffcc;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .voltar:hover {
+      color: #00ccff;
+    }
+
   </style>
 </head>
+
 <body>
+  <div class="box">
+    <h2>Login Nexus Studios</h2>
 
-<div class="box">
-  <h2>Login Nexus Studios</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="senha" placeholder="Senha">
 
-  <input type="text" id="nome" placeholder="Seu nome"><br>
-  <input type="email" id="email" placeholder="E-mail"><br>
-  <input type="password" id="senha" placeholder="Senha"><br>
+    <button onclick="login()">Entrar no Torneio</button>
 
-  <button onclick="criarConta()">Criar Conta</button>
-  <button onclick="login()">Entrar</button>
-
-  <p id="msg"></p>
-</div>
-
-<script>
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDj5-aBr2n_wg80HswcaIOjetm7DtxILSI",
-  authDomain: "nexostudios-site-e9458.firebaseapp.com",
-  projectId: "nexostudios-site-e9458",
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-function gerarID(nome){
-  const ano = new Date().getFullYear();
-  const hora = new Date().getHours();
-  const minuto = new Date().getMinutes();
-  return nome.substring(0,2).toUpperCase() + ano + hora + minuto;
-}
-
-function criarConta(){
-  const nome = document.getElementById("nome").value;
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
-
-  auth.createUserWithEmailAndPassword(email, senha)
-  .then((userCredential) => {
-
-    const user = userCredential.user;
-    const idPersonalizado = gerarID(nome);
-
-    db.collection("usuarios").doc(user.uid).set({
-      nome: nome,
-      email: email,
-      idPersonalizado: idPersonalizado,
-      dataCriacao: new Date(),
-      statusPagamento: "aguardando_verificacao"
-    });
-
-    document.getElementById("msg").innerText = 
-      "Conta criada! Seu ID é: " + idPersonalizado;
-
-  })
-  .catch((error) => {
-    document.getElementById("msg").innerText = error.message;
-  });
-}
-
-function login(){
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
-
-  auth.signInWithEmailAndPassword(email, senha)
-  .then(() => {
-    window.location.href = "https://site.google.com/view/nexusstudios/torneio-liberado";
-  })
-  .catch((error) => {
-    document.getElementById("msg").innerText = error.message;
-  });
-}
-
-</script>
-
+    <a class="voltar" href="https://site.google.com/view/nexusstudios/inicio">
+      Voltar para Página Inicial
+    </a>
+  </div>
 </body>
 </html>
