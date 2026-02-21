@@ -1,179 +1,161 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEXO Studios - Login</title>
+<meta charset="UTF-8">
+<title>NEXO Studios - Login</title>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #00ffcc, #00bfff);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(120deg, #00ffcc, #3399ff); /* Azul-verde neon */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-    .container {
-      background: rgba(0,0,0,0.8);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px #00ffcc;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-    }
+.container {
+    background: rgba(0,0,0,0.8);
+    padding: 30px;
+    border-radius: 15px;
+    width: 350px;
+    text-align: center;
+    color: #fff;
+}
 
-    h1 {
-      color: #fff;
-      margin-bottom: 25px;
-    }
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 16px;
-    }
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+    background: #00ffcc;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-    button {
-      width: 100%;
-      padding: 14px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-      font-size: 18px;
-      font-weight: bold;
-      color: #fff;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+button:hover {
+    background: #3399ff;
+    color: #fff;
+}
 
-    #createBtn {
-      background: #00ffcc;
-    }
+p {
+    font-size: 14px;
+    margin-top: 15px;
+    color: #fff;
+}
 
-    #createBtn:hover {
-      background: #00bfff;
-    }
-
-    #loginBtn {
-      background: #00bfff;
-    }
-
-    #loginBtn:hover {
-      background: #00ffcc;
-    }
-
-    #voltarBtn {
-      background: #ff0066;
-      width: 50%;
-    }
-
-    #voltarBtn:hover {
-      background: #ff3399;
-    }
-
-    #msg {
-      color: yellow;
-      margin-top: 12px;
-    }
-
-    @media (max-width: 480px){
-      button {
-        font-size: 16px;
-        padding: 12px;
-      }
-    }
-  </style>
+a {
+    color: #fff;
+    text-decoration: underline;
+    cursor: pointer;
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>NEXO Studios</h1>
-    <input type="text" id="nome" placeholder="Nome de usuário">
+
+<div class="container" id="loginDiv">
+    <h2>Login / Cadastro</h2>
+    <input type="text" id="nome" placeholder="Nome (apenas cadastro)">
     <input type="email" id="email" placeholder="E-mail">
     <input type="password" id="senha" placeholder="Senha">
-
-    <button id="createBtn" onclick="signup()">Criar Conta</button>
-    <button id="loginBtn" onclick="login()">Entrar</button>
-    <button id="voltarBtn" onclick="voltarInicio()">Voltar para Início</button>
-
+    <div>
+        <button onclick="signup()">Criar Conta</button>
+        <button onclick="login()">Entrar</button>
+    </div>
     <p id="msg"></p>
-  </div>
+    <p><a onclick="voltarInicio()">Voltar para o Início</a></p>
+</div>
 
-  <script>
-    // CONFIGURE AQUI O SEU FIREBASE
-    const firebaseConfig = {
-      apiKey: "AIzaSyDj5-aBr2n_wg80HswcaIOjetm7DtxILSI",
-      authDomain: "nexostudios-site-e9458.firebaseapp.com",
-      databaseURL: "https://nexostudios-site-e9458-default-rtdb.firebaseio.com",
-      projectId: "nexostudios-site-e9458",
-      storageBucket: "nexostudios-site-e9458.firebasestorage.app",
-      messagingSenderId: "247851109985",
-      appId: "1:247851109985:web:1b8903891240c55a376420"
-    };
+<script>
+  // Configurações do seu Firebase
+  const firebaseConfig = {
+    apiKey: "SUA_APIKEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    projectId: "SEU_PROJETO",
+    storageBucket: "SEU_PROJETO.appspot.com",
+    messagingSenderId: "SEU_MESSAGINGID",
+    appId: "SEU_APPID"
+  };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+  // Inicializar Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-    function signup(){
+  // Função de login
+  function login() {
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      auth.signInWithEmailAndPassword(email, senha)
+      .then((userCredential) => {
+          document.getElementById('msg').innerText = "Login realizado!";
+          // Redireciona para página de torneio liberado
+          window.location.href = "https://sites.google.com/view/nexostudios/torneio-liberado";
+      })
+      .catch((error) => {
+          document.getElementById('msg').innerText = error.message;
+      });
+  }
+
+  // Função de cadastro
+  function signup() {
       const nome = document.getElementById('nome').value;
       const email = document.getElementById('email').value;
       const senha = document.getElementById('senha').value;
 
-      if(!nome || !email || !senha){
-        document.getElementById('msg').innerText = "Preencha todos os campos!";
-        return;
-      }
-
       auth.createUserWithEmailAndPassword(email, senha)
-        .then(userCredential => {
-          const userId = userCredential.user.uid;
-          db.ref('usuarios/' + userId).set({
-            nome: nome,
-            email: email,
-            createdAt: new Date().toISOString()
-          });
-          document.getElementById('msg').innerText = "Conta criada! Faça login.";
-        })
-        .catch(error => {
+      .then((userCredential) => {
+          const user = userCredential.user;
+          const data = {
+              nome: nome,
+              email: email,
+              idUsuario: gerarID(nome),
+              dataCadastro: new Date().toISOString(),
+              statusPagamento: "pendente"
+          };
+          db.collection("usuarios").doc(user.uid).set(data);
+          document.getElementById('msg').innerText = "Conta criada! Faça login agora.";
+      })
+      .catch((error) => {
           document.getElementById('msg').innerText = error.message;
-        });
-    }
+      });
+  }
 
-    function login(){
-      const email = document.getElementById('email').value;
-      const senha = document.getElementById('senha').value;
+  // Função para gerar ID do usuário
+  function gerarID(nome) {
+      const iniciais = nome.split(' ').map(p => p[0].toUpperCase()).join('');
+      const dataHora = new Date();
+      const id = iniciais + 
+                 dataHora.getFullYear() +
+                 ("0"+(dataHora.getMonth()+1)).slice(-2) +
+                 ("0"+dataHora.getDate()).slice(-2) +
+                 ("0"+dataHora.getHours()).slice(-2) +
+                 ("0"+dataHora.getMinutes()).slice(-2);
+      return id;
+  }
 
-      if(!email || !senha){
-        document.getElementById('msg').innerText = "Preencha e-mail e senha!";
-        return;
-      }
+  // Voltar para página inicial
+  function voltarInicio() {
+      window.location.href = "https://sites.google.com/view/nexostudios/inicio";
+  }
+</script>
 
-      auth.signInWithEmailAndPassword(email, senha)
-        .then(userCredential => {
-          document.getElementById('msg').innerText = "Login realizado!";
-          window.location.href = https://sites.google.com/view/nexostudios/torneio-liberado
-        })
-        .catch(error => {
-          document.getElementById('msg').innerText = error.message;
-        });
-    }
-
-    function voltarInicio(){
-      window.location.href = https://sites.google.com/view/nexostudios/in%C3%ADcio
-    }
-  </script>
 </body>
 </html>
