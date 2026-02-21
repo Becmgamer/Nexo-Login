@@ -10,38 +10,36 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <!-- Estilo -->
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(120deg, #00ffcc, #00bfff);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
       margin: 0;
-    }
-
-    h1 {
-      color: #fff;
-      margin-bottom: 20px;
-      text-align: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #00ffcc, #00bfff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
 
     .container {
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.8);
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 0 20px #00ffcc;
       width: 90%;
       max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #fff;
+      margin-bottom: 25px;
     }
 
     input {
       width: 100%;
       padding: 12px;
-      margin: 8px 0;
+      margin: 10px 0;
       border-radius: 8px;
       border: none;
       outline: none;
@@ -50,88 +48,98 @@
 
     button {
       width: 100%;
-      padding: 12px;
-      margin-top: 12px;
-      border: none;
+      padding: 14px;
+      margin: 10px 0;
       border-radius: 8px;
+      border: none;
       font-size: 18px;
-      cursor: pointer;
       font-weight: bold;
       color: #fff;
-      background: #00ffcc;
+      cursor: pointer;
       transition: 0.3s;
     }
 
-    button:hover {
+    #createBtn {
+      background: #00ffcc;
+    }
+
+    #createBtn:hover {
       background: #00bfff;
     }
 
-    .small-btn {
-      width: 48%;
-      margin-top: 10px;
-      display: inline-block;
+    #loginBtn {
+      background: #00bfff;
+    }
+
+    #loginBtn:hover {
+      background: #00ffcc;
+    }
+
+    #voltarBtn {
+      background: #ff0066;
+      width: 50%;
+    }
+
+    #voltarBtn:hover {
+      background: #ff3399;
     }
 
     #msg {
-      margin-top: 12px;
       color: yellow;
-      text-align: center;
+      margin-top: 12px;
     }
 
-    @media (max-width: 480px) {
-      .container {
-        padding: 20px;
-      }
+    @media (max-width: 480px){
       button {
         font-size: 16px;
+        padding: 12px;
       }
     }
   </style>
 </head>
 <body>
-  <h1>NEXO Studios</h1>
   <div class="container">
+    <h1>NEXO Studios</h1>
     <input type="text" id="nome" placeholder="Nome de usuário">
     <input type="email" id="email" placeholder="E-mail">
     <input type="password" id="senha" placeholder="Senha">
 
-    <button onclick="signup()">Criar Conta</button>
-    <button onclick="login()">Entrar</button>
-    <button class="small-btn" onclick="voltarInicio()">Voltar para início</button>
+    <button id="createBtn" onclick="signup()">Criar Conta</button>
+    <button id="loginBtn" onclick="login()">Entrar</button>
+    <button id="voltarBtn" onclick="voltarInicio()">Voltar para Início</button>
 
     <p id="msg"></p>
   </div>
 
   <script>
-    // CONFIGURAR COM SUA PRÓPRIA URL DO FIREBASE
+    // CONFIGURE AQUI O SEU FIREBASE
     const firebaseConfig = {
-      apiKey: "AIzaSyDj5-aBr2n_wg80HswcaIOjetm7DtxILSI",
-      authDomain: "nexostudios-site-e9458.firebaseapp.com",
-      databaseURL: https://nexostudios-site-e9458-default-rtdb.firebaseio.com/
-      projectId: "nexostudios-site-e9458",
-      storageBucket: "nexostudios-site-e9458.firebasestorage.app",
-      messagingSenderId: "247851109985",
-      appId: "1:247851109985:web:1b8903891240c55a376420"
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_PROJETO.firebaseapp.com",
+      databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com/",
+      projectId: "SEU_PROJETO",
+      storageBucket: "SEU_PROJETO.appspot.com",
+      messagingSenderId: "SEU_MESSAGING_ID",
+      appId: "SEU_APP_ID"
     };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
 
-    function signup() {
+    function signup(){
+      const nome = document.getElementById('nome').value;
       const email = document.getElementById('email').value;
       const senha = document.getElementById('senha').value;
-      const nome = document.getElementById('nome').value;
 
-      if(!email || !senha || !nome){
+      if(!nome || !email || !senha){
         document.getElementById('msg').innerText = "Preencha todos os campos!";
         return;
       }
 
       auth.createUserWithEmailAndPassword(email, senha)
-        .then((userCredential) => {
+        .then(userCredential => {
           const userId = userCredential.user.uid;
-          // Salva info no database
           db.ref('usuarios/' + userId).set({
             nome: nome,
             email: email,
@@ -139,12 +147,12 @@
           });
           document.getElementById('msg').innerText = "Conta criada! Faça login.";
         })
-        .catch((error) => {
+        .catch(error => {
           document.getElementById('msg').innerText = error.message;
         });
     }
 
-    function login() {
+    function login(){
       const email = document.getElementById('email').value;
       const senha = document.getElementById('senha').value;
 
@@ -154,12 +162,11 @@
       }
 
       auth.signInWithEmailAndPassword(email, senha)
-        .then((userCredential) => {
+        .then(userCredential => {
           document.getElementById('msg').innerText = "Login realizado!";
-          // Redireciona para página do torneio
           window.location.href = "https://site.google.com/view/nexostudios/torneio";
         })
-        .catch((error) => {
+        .catch(error => {
           document.getElementById('msg').innerText = error.message;
         });
     }
