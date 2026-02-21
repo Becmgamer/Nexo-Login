@@ -1,160 +1,161 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>NEXO Studios - Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Nexo Studios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #00ffcc, #00ccff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #loginDiv {
+      background-color: rgba(0,0,0,0.8);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #00ffcc;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      color: white;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(90deg, #00ffcc, #00ccff);
+      transition: 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #00ccff, #00ffcc);
+    }
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    #extraButtons {
+      margin-top: 20px;
+    }
+    #extraButtons button {
+      width: 80%;
+      margin: 5px 0;
+    }
+  </style>
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(120deg, #00ffcc, #3399ff); /* Azul-verde neon */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.container {
-    background: rgba(0,0,0,0.8);
-    padding: 30px;
-    border-radius: 15px;
-    width: 350px;
-    text-align: center;
-    color: #fff;
-}
-
-input {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: none;
-}
-
-button {
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 5px;
-    border: none;
-    background: #00ffcc;
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background: #3399ff;
-    color: #fff;
-}
-
-p {
-    font-size: 14px;
-    margin-top: 15px;
-    color: #fff;
-}
-
-a {
-    color: #fff;
-    text-decoration: underline;
-    cursor: pointer;
-}
-</style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
-<div class="container" id="loginDiv">
-    <h2>Login / Cadastro</h2>
-    <input type="text" id="nome" placeholder="Nome (apenas cadastro)">
-    <input type="email" id="email" placeholder="E-mail">
-    <input type="password" id="senha" placeholder="Senha">
-    <div>
-        <button onclick="signup()">Criar Conta</button>
-        <button onclick="login()">Entrar</button>
-    </div>
-    <p id="msg"></p>
-    <p><a onclick="voltarInicio()">Voltar para o Início</a></p>
+<div id="loginDiv">
+  <h1>Login Nexo Studios</h1>
+
+  <input type="text" id="nome" placeholder="Nome">
+  <input type="email" id="email" placeholder="E-mail">
+  <input type="password" id="senha" placeholder="Senha">
+  <br>
+  <button onclick="signup()">Criar Conta</button>
+  <button onclick="login()">Entrar</button>
+
+  <p id="msg"></p>
+
+  <div id="extraButtons">
+    <button onclick="voltarInicio()">Voltar para início</button>
+    <button onclick="verTorneios()">Torneios disponíveis</button>
+    <button onclick="verCalendario()">Ver calendário</button>
+  </div>
 </div>
 
 <script>
-  // Configurações do seu Firebase
   const firebaseConfig = {
-    apiKey: "AIzaSyDj5-aBr2n_wg80HswcaIOjetm7DtxILSI",
-    authDomain: "nexostudios-site-e9458.firebaseapp.com",
-    projectId: "nexostudios-site-e9458",
-    storageBucket: "nexostudios-site-e9458.firebasestorage.app",
-    messagingSenderId: "247851109985",
-    appId: "1:247851109985:web:1b8903891240c55a376420"
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+    projectId: "SEU_PROJETO",
+    storageBucket: "SEU_PROJETO.appspot.com",
+    messagingSenderId: "SEU_SENDER_ID",
+    appId: "SEU_APP_ID"
   };
 
-  // Inicializar Firebase
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
-  const db = firebase.firestore();
+  const database = firebase.database();
 
-  // Função de login
-  function login() {
-      const email = document.getElementById('email').value;
-      const senha = document.getElementById('senha').value;
-      auth.signInWithEmailAndPassword(email, senha)
-      .then((userCredential) => {
-          document.getElementById('msg').innerText = "Login realizado!";
-          // Redireciona para página de torneio liberado
-          window.location.href = "https://sites.google.com/view/nexostudios/torneio-liberado";
-      })
-      .catch((error) => {
-          document.getElementById('msg').innerText = error.message;
-      });
-  }
-
-  // Função de cadastro
-  function signup() {
-      const nome = document.getElementById('nome').value;
-      const email = document.getElementById('email').value;
-      const senha = document.getElementById('senha').value;
-
-      auth.createUserWithEmailAndPassword(email, senha)
-      .then((userCredential) => {
-          const user = userCredential.user;
-          const data = {
-              nome: nome,
-              email: email,
-              idUsuario: gerarID(nome),
-              dataCadastro: new Date().toISOString(),
-              statusPagamento: "pendente"
-          };
-          db.collection("usuarios").doc(user.uid).set(data);
-          document.getElementById('msg').innerText = "Conta criada! Faça login agora.";
-      })
-      .catch((error) => {
-          document.getElementById('msg').innerText = error.message;
-      });
-  }
-
-  // Função para gerar ID do usuário
-  function gerarID(nome) {
-      const iniciais = nome.split(' ').map(p => p[0].toUpperCase()).join('');
-      const dataHora = new Date();
-      const id = iniciais + 
-                 dataHora.getFullYear() +
-                 ("0"+(dataHora.getMonth()+1)).slice(-2) +
-                 ("0"+dataHora.getDate()).slice(-2) +
-                 ("0"+dataHora.getHours()).slice(-2) +
-                 ("0"+dataHora.getMinutes()).slice(-2);
-      return id;
-  }
-
-  // Voltar para página inicial
+  // Redirecionamentos dos botões extras
   function voltarInicio() {
-      window.location.href = "https://sites.google.com/view/nexostudios/inicio";
+    window.location.href = "https://site.google.com/view/nexusstudios/inicio";
   }
+  function verTorneios() {
+    window.location.href = "https://site.google.com/view/nexusstudios/torneios-disponiveis";
+  }
+  function verCalendario() {
+    window.location.href = "https://site.google.com/view/nexusstudios/calendario";
+  }
+
+  function signup() {
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
+
+    auth.createUserWithEmailAndPassword(email, senha)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      const idUsuario = nome.substring(0,2).toUpperCase() + Date.now();
+      database.ref('usuarios/' + idUsuario).set({
+        nome: nome,
+        email: email,
+        uid: user.uid,
+        criadoEm: new Date().toISOString()
+      });
+      document.getElementById('msg').innerText = "Conta criada! Agora faça login.";
+    })
+    .catch((error) => {
+      document.getElementById('msg').innerText = error.message;
+    });
+  }
+
+  function login() {
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
+
+    auth.signInWithEmailAndPassword(email, senha)
+    .then((userCredential) => {
+      document.getElementById('msg').innerText = "Você foi logado com sucesso!";
+      // Redireciona automaticamente para torneio liberado
+      setTimeout(() => {
+        window.location.href = "https://site.google.com/view/nexusstudios/torneio-liberado";
+      }, 1500);
+    })
+    .catch((error) => {
+      document.getElementById('msg').innerText = error.message;
+    });
+  }
+
+  // Manter usuário logado
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('msg').innerText = "Você está logado com sucesso!";
+    }
+  });
 </script>
 
 </body>
